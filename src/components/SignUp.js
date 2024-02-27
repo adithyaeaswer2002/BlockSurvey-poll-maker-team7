@@ -1,7 +1,7 @@
 import styles from '../styles/components/SignUp.module.css';
 import { useSignUpEmailPassword } from '@nhost/react';
 import { useState } from 'react';
-import { Link , useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Input from './Input';
 import Spinner from './Spinner';
 
@@ -12,23 +12,30 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate hook
  
-  const { signUpEmailPassword , isLoading, isSuccess, needsEmailVerification, isError, error } = useSignUpEmailPassword();
+  const { signUpEmailPassword, isLoading, isSuccess, needsEmailVerification, isError, error } = useSignUpEmailPassword();
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-
-    signUpEmailPassword(email, password, {
-      displayName: `${firstName} ${lastName}`.trim(),
-      metadata: {
-        firstName,
-        lastName
-      }
-    });
+  
+    try {
+      await signUpEmailPassword(email, password, {
+        displayName: `${firstName} ${lastName}`.trim(),
+        metadata: {
+          firstName,
+          lastName
+        }
+      });
+      // If sign-up is successful, navigate to the dashboard
+      navigate('/dashboard');
+    } catch (error) {
+      // Handle sign-up errors here
+      console.error(error);
+    }
   };
+  
 
   if (isSuccess) {
-    navigate('./dashboard');
-
+    navigate('/dashboard');
   }
    
   const disableForm = isLoading || needsEmailVerification;
@@ -75,8 +82,8 @@ const SignUp = () => {
               required
             />
 
-            <button type="submit" className={styles.button}>
-              Create account
+            <button type="submit" className={styles.button} disabled={disableForm}>
+              {isLoading ? <Spinner /> : 'Create account'}
             </button>
           </form>
         )}

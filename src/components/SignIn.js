@@ -1,3 +1,4 @@
+// SignIn.js
 import styles from '../styles/components/SignIn.module.css';
 import { useSignInEmailPassword } from '@nhost/react';
 import { useState } from 'react';
@@ -10,13 +11,12 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate hook
 
-  const { signInEmailPassword, isLoading, isSuccess, needsEmailVerification, isError, error } = useSignInEmailPassword();
+  const { signInEmailPassword, isLoading, isSuccess, isError } = useSignInEmailPassword();
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     try {
       await signInEmailPassword(email, password);
-      navigate('./dashboard'); // Use navigate to redirect to the dashboard
     } catch (error) {
       // Handle sign-in errors here
       console.error(error);
@@ -24,10 +24,8 @@ const SignIn = () => {
   };
 
   if (isSuccess) {
-    navigate('./dashboard');
+    navigate('/dashboard'); // Redirect to the dashboard after successful sign-in
   }
-
-  const disableForm = isLoading || needsEmailVerification;
 
   return (
     <div className={styles.container}>
@@ -53,7 +51,7 @@ const SignIn = () => {
           />
 
           <button type="submit" className={styles.button}>
-            Sign in
+            {isLoading ? <Spinner /> : 'Sign in'}
           </button>
         </form>
       </div>

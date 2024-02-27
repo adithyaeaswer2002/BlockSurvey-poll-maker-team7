@@ -23,7 +23,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="sign-up" element={<SignUp />} />
-            <Route path="sign-in" element={<SignIn />} />
+            <Route path="SignIn" element={<SignIn />} />
             <Route path="/" element={
               <ProtectedRoute>
                 <Layout />
